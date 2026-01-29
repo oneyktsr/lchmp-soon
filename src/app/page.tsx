@@ -1,66 +1,44 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+import { MaskText } from "@/components/ui/mask-text";
 
 export default function Home() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className={styles.intro}>
-          <h1>To get started, edit the page.tsx file.</h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+    <main className="px-page-margin flex min-h-screen w-full flex-col items-center justify-center overflow-hidden">
+      {/* 1. Kısım: Marka - Hemen gelir */}
+      <MaskText
+        tag="h1"
+        className="text-display text-center font-medium leading-[0.9] tracking-tighter"
+      >
+        Create. Connect. Cultivate.
+      </MaskText>
+
+      {/* 2. Kısım: Alt Başlık - 0.2sn gecikmeli */}
+      <MaskText
+        tag="h2"
+        className="text-h4 mt-4 text-center font-normal opacity-60"
+        delay={0.2}
+      >
+        Interactive Development Studio
+      </MaskText>
+
+      {/* 3. Kısım: Açıklama Paragrafı 1 - 0.4sn gecikmeli */}
+      <div className="mt-12 max-w-2xl space-y-8 text-center">
+        <MaskText tag="p" className="text-body leading-relaxed" delay={0.4}>
+          We craft digital experiences that merge art with technology. Based in
+          the intersection of design and code, we build immersive web
+          applications that leave a lasting impression.
+        </MaskText>
+
+        {/* 4. Kısım: Açıklama Paragrafı 2 - 0.6sn gecikmeli */}
+        <MaskText
+          tag="p"
+          className="text-body leading-relaxed opacity-70"
+          delay={0.6}
+        >
+          Our approach is rooted in precision, performance, and a deep
+          understanding of user interaction. Every pixel serves a purpose, every
+          animation tells a story.
+        </MaskText>
+      </div>
+    </main>
   );
 }

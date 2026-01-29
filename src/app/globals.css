@@ -1,42 +1,84 @@
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Renk Paleti (Light Mode Default) */
+    --background: #ebe7e1;
+    --foreground: #0e0f12;
+    --border: #0e0f12; /* EKLENDİ: Border rengi foreground ile aynı */
+
+    /* Akışkan Tipografi (Clamp Ayarları) */
+    --text-display: clamp(2.75rem, 1.5rem + 3.8vw, 7.5rem);
+    --text-h1: clamp(2.25rem, 1rem + 2.8vw, 5.5rem);
+    --text-h2: clamp(1.75rem, 0.8rem + 2.2vw, 4rem);
+    --text-h3: clamp(1.5rem, 0.8rem + 1.5vw, 3rem);
+    --text-h4: clamp(1.25rem, 1rem + 0.9vw, 2.5rem);
+    --text-h5: clamp(1.125rem, 1rem + 0.6vw, 1.625rem);
+    --text-h6: clamp(1.125rem, 1rem + 0.3vw, 1.375rem);
+
+    --text-body: clamp(1rem, 0.9rem + 0.25vw, 1.25rem);
+    --text-small: clamp(0.8125rem, 0.75rem + 0.15vw, 0.9375rem);
+    --text-quote: clamp(1.25rem, 1rem + 1.2vw, 2.25rem);
+    --text-overline: clamp(0.75rem, 0.7rem + 0.1vw, 0.875rem);
+    --text-ui: clamp(0.9375rem, 0.9rem + 0.2vw, 1.0625rem);
+    --text-caption: clamp(0.75rem, 0.7rem + 0.12vw, 0.875rem);
+
+    /* Layout Spacing */
+    --page-margin: clamp(1.25rem, calc(1.9vw + 0.8rem), 3.75rem);
+    --grid-gutter: clamp(0.75rem, calc(0.75vw + 0.56rem), 2rem);
+    --section-gap: clamp(3.5rem, calc(4.5vw + 2rem), 8.5rem);
+  }
+
+  /* Dark Mode Override */
+  .dark {
+    --background: #0e0f12;
+    --foreground: #ebe7e1;
+    --border: #ebe7e1; /* EKLENDİ */
   }
 }
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
+@layer base {
+  * {
+    @apply border-border; /* Artık çalışacak çünkü 'border' rengini tanımladık */
+  }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-* {
-  box-sizing: border-box;
-  padding: 0;
-  margin: 0;
-}
-
-a {
-  color: inherit;
-  text-decoration: none;
-}
-
-@media (prefers-color-scheme: dark) {
   html {
-    color-scheme: dark;
+    @apply h-full;
   }
+
+  body {
+    @apply bg-background text-foreground relative h-full w-full antialiased;
+    font-feature-settings:
+      "rlig" 1,
+      "calt" 1;
+  }
+
+  /* Apple ve Mobil cihazlar için Zıplamayan/Kaymayan Tam Ekran */
+  @supports (-webkit-touch-callout: none) {
+    .h-screen {
+      height: 100svh;
+    }
+  }
+}
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+.lenis.lenis-scrolling iframe {
+  pointer-events: none;
 }
