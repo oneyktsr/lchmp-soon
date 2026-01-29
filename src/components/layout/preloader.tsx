@@ -1,7 +1,7 @@
 "use client";
 
 import { useLayoutEffect, useRef, useState } from "react";
-import TransitionLink from "@/components/ui/transition-link"; // DEĞİŞİKLİK: Link yerine TransitionLink
+import TransitionLink from "@/components/ui/transition-link";
 import gsap from "@/plugins/gsap";
 import { cn } from "@/lib/utils/cn";
 import { useLoading } from "@/context/loading-context";
@@ -21,8 +21,18 @@ export default function Preloader() {
   const { setIsLoading } = useLoading();
 
   useLayoutEffect(() => {
-    // 1. SCROLL KİLİDİ
-    document.body.style.overflow = "hidden";
+    // --- 1. GÜÇLENDİRİLMİŞ SCROLL KİLİDİ (BAŞLANGIÇ) ---
+    // Sadece overflow:hidden yetmeyebilir, body'yi 'fixed' yaparak viewport'a çiviliyoruz.
+    // Bu işlem sayfanın arkada kaymasını %100 engeller.
+    const body = document.body;
+    const html = document.documentElement;
+
+    body.style.overflow = "hidden";
+    body.style.height = "100vh"; // Mobil kaydırmayı önlemek için kritik
+    body.style.position = "fixed"; // Sayfa akışını dondurur
+    body.style.width = "100%";
+    html.style.overflow = "hidden";
+
     window.scrollTo(0, 0);
 
     const ctx = gsap.context(() => {
@@ -39,7 +49,14 @@ export default function Preloader() {
         onComplete: () => {
           setIsCurtainVisible(false);
           setIsInteractionEnabled(true);
-          document.body.style.overflow = "";
+
+          // --- 2. SCROLL KİLİDİNİ AÇMA (BİTİŞ) ---
+          // Verdiğimiz tüm stilleri temizliyoruz
+          body.style.overflow = "";
+          body.style.height = "";
+          body.style.position = "";
+          body.style.width = "";
+          html.style.overflow = "";
 
           // GLOBAL LOADING BİTİŞ SİNYALİ
           setIsLoading(false);
@@ -134,7 +151,12 @@ export default function Preloader() {
 
     return () => {
       ctx.revert();
-      document.body.style.overflow = "";
+      // Temizlik anında scroll'un kesinlikle açıldığından emin olalım
+      body.style.overflow = "";
+      body.style.height = "";
+      body.style.position = "";
+      body.style.width = "";
+      html.style.overflow = "";
     };
   }, [setIsLoading]);
 
@@ -149,7 +171,6 @@ export default function Preloader() {
         <div className="container mx-auto">
           <div className="gap-grid-gutter grid grid-cols-4 md:grid-cols-8 lg:grid-cols-12">
             <div className="col-span-full">
-              {/* DEĞİŞİKLİK BURADA: Link -> TransitionLink */}
               <TransitionLink
                 href="/"
                 className={cn(
