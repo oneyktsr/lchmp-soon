@@ -1,28 +1,37 @@
 "use client";
 
-import { useLayoutEffect } from "react";
+import { useLayoutEffect, useRef } from "react";
 import gsap from "@/plugins/gsap";
+import { usePathname } from "next/navigation";
 
-// Tip Tanımlaması
 interface GSAPExtended {
   set: (targets: unknown, vars: Record<string, unknown>) => void;
   killTweensOf: (targets: unknown) => void;
 }
 
 export default function Template({ children }: { children: React.ReactNode }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const pathname = usePathname();
+
   useLayoutEffect(() => {
     const gsapSafe = gsap as unknown as GSAPExtended;
-    const target = document.getElementById("page-transition-container");
 
-    if (target) {
-      // 1. Önceki animasyonları öldür (Çakışmayı önler)
-      gsapSafe.killTweensOf(target);
+    if (containerRef.current) {
+      // 1. Önceki tüm animasyonları durdur (Çakışma önlemi)
+      gsapSafe.killTweensOf(containerRef.current);
 
-      // 2. Opacity stilini tamamen sil (Browser default'a döner, yani görünür olur)
-      // Bu işlem boyama (paint) öncesi yapıldığı için kullanıcı yanıp sönme görmez.
-      gsapSafe.set(target, { clearProps: "opacity" });
+      // 2. Elementin üzerindeki tüm inline stilleri (opacity: 0 dahil) temizle
+      gsapSafe.set(containerRef.current, { clearProps: "all" });
+
+      // 3. Garanti olsun diye Opacity 1 yap
+      gsapSafe.set(containerRef.current, { opacity: 1 });
     }
-  }, []);
+  }, [pathname]); // Path her değiştiğinde bu kod çalışır
 
-  return <>{children}</>;
+  return (
+    // ID'yi BURAYA verdik. animatePageOut fonksiyonu bu ID'yi bulacak.
+    <div ref={containerRef} id="page-transition-container" className="w-full">
+      {children}
+    </div>
+  );
 }

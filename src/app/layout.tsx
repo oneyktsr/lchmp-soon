@@ -91,9 +91,9 @@ export default function RootLayout({
             <Preloader />
             <Header />
 
-            {/* DEĞİŞİKLİK BURADA: */}
-            {/* Header dışarıda kaldı, sayfa içeriğini özel bir ID ile sarmaladık */}
-            <div id="page-transition-container">{children}</div>
+            {/* DÜZELTME: Wrapper div ve ID buradan kaldırıldı. */}
+            {/* Artık Children doğrudan render ediliyor. Kontrol Template'de. */}
+            {children}
           </SmoothScroll>
         </LoadingProvider>
 
