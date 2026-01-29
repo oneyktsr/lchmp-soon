@@ -7,7 +7,7 @@
     /* Renk Paleti (Light Mode Default) */
     --background: #ebe7e1;
     --foreground: #0e0f12;
-    --border: #0e0f12; /* EKLENDİ: Border rengi foreground ile aynı */
+    --border: #0e0f12;
 
     /* Akışkan Tipografi (Clamp Ayarları) */
     --text-display: clamp(2.75rem, 1.5rem + 3.8vw, 7.5rem);
@@ -35,21 +35,25 @@
   .dark {
     --background: #0e0f12;
     --foreground: #ebe7e1;
-    --border: #ebe7e1; /* EKLENDİ */
+    --border: #ebe7e1;
   }
 }
 
 @layer base {
   * {
-    @apply border-border; /* Artık çalışacak çünkü 'border' rengini tanımladık */
+    @apply border-border;
   }
 
   html {
     @apply h-full;
+    /* DÜZELTME: Sayfa sonlarındaki esneme (bounce) efektini kapatır */
+    overscroll-behavior: none;
   }
 
   body {
     @apply bg-background text-foreground relative h-full w-full antialiased;
+    /* Body için de garantiye alıyoruz */
+    overscroll-behavior: none;
     font-feature-settings:
       "rlig" 1,
       "calt" 1;
@@ -62,6 +66,7 @@
     }
   }
 }
+
 html.lenis,
 html.lenis body {
   height: auto;
