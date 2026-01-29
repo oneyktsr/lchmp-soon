@@ -17,26 +17,13 @@ export default function Preloader() {
   const [isCurtainVisible, setIsCurtainVisible] = useState(true);
   const [isInteractionEnabled, setIsInteractionEnabled] = useState(false);
 
-  // Context'ten durumu güncelleme fonksiyonunu alıyoruz
   const { setIsLoading } = useLoading();
 
   useLayoutEffect(() => {
-    // --- 1. GÜÇLENDİRİLMİŞ SCROLL KİLİDİ (BAŞLANGIÇ) ---
-    // Sadece overflow:hidden yetmeyebilir, body'yi 'fixed' yaparak viewport'a çiviliyoruz.
-    // Bu işlem sayfanın arkada kaymasını %100 engeller.
-    const body = document.body;
-    const html = document.documentElement;
-
-    body.style.overflow = "hidden";
-    body.style.height = "100vh"; // Mobil kaydırmayı önlemek için kritik
-    body.style.position = "fixed"; // Sayfa akışını dondurur
-    body.style.width = "100%";
-    html.style.overflow = "hidden";
-
+    // Sayfa başlangıcında en tepeye al (Garanti olsun)
     window.scrollTo(0, 0);
 
     const ctx = gsap.context(() => {
-      // --- HESAPLAMA ---
       const logoEl = logoRef.current;
       if (!logoEl) return;
 
@@ -50,15 +37,8 @@ export default function Preloader() {
           setIsCurtainVisible(false);
           setIsInteractionEnabled(true);
 
-          // --- 2. SCROLL KİLİDİNİ AÇMA (BİTİŞ) ---
-          // Verdiğimiz tüm stilleri temizliyoruz
-          body.style.overflow = "";
-          body.style.height = "";
-          body.style.position = "";
-          body.style.width = "";
-          html.style.overflow = "";
-
           // GLOBAL LOADING BİTİŞ SİNYALİ
+          // Bu sinyal SmoothScroll componentini tetikleyerek scroll'u açacak.
           setIsLoading(false);
         },
       });
@@ -79,20 +59,14 @@ export default function Preloader() {
         transformOrigin: "left center",
       });
 
-      // --- ANİMASYON ---
-
-      // 1. Harfler
+      // --- ANİMASYONLAR ---
       tl.to(".char", {
         opacity: 1,
         duration: 1.5,
         ease: "power2.out",
-        stagger: {
-          amount: 0.8,
-          from: "random",
-        },
+        stagger: { amount: 0.8, from: "random" },
       });
 
-      // 2. Çizgi Giriş
       tl.to(
         ".line-anim",
         {
@@ -103,7 +77,6 @@ export default function Preloader() {
         "-=1.0",
       );
 
-      // 3. Çizgi Çıkış
       tl.to(".line-anim", {
         scaleX: 0,
         transformOrigin: "right",
@@ -111,11 +84,9 @@ export default function Preloader() {
         ease: "power4.inOut",
       });
 
-      // --- LIFT OFF ---
       const label = "liftOff";
       tl.addLabel(label);
 
-      // 4A. Perde Kalkışı
       tl.to(
         curtainRef.current,
         {
@@ -126,7 +97,6 @@ export default function Preloader() {
         label,
       );
 
-      // 4B. Logo Yerleşimi
       tl.to(
         logoRef.current,
         {
@@ -137,7 +107,6 @@ export default function Preloader() {
         label,
       );
 
-      // 4C. Metin Normale Dönüş
       tl.to(
         textRef.current,
         {
@@ -149,20 +118,12 @@ export default function Preloader() {
       );
     }, wrapperRef);
 
-    return () => {
-      ctx.revert();
-      // Temizlik anında scroll'un kesinlikle açıldığından emin olalım
-      body.style.overflow = "";
-      body.style.height = "";
-      body.style.position = "";
-      body.style.width = "";
-      html.style.overflow = "";
-    };
+    return () => ctx.revert();
   }, [setIsLoading]);
 
   return (
     <div ref={wrapperRef}>
-      {/* KATMAN 1: LOGO (KALICI) */}
+      {/* KATMAN 1: LOGO */}
       <div
         ref={logoRef}
         className="pointer-events-none fixed left-0 z-50 w-full text-[#ebe7e1] mix-blend-difference"
@@ -196,7 +157,7 @@ export default function Preloader() {
         </div>
       </div>
 
-      {/* KATMAN 2: PERDE (GEÇİCİ) */}
+      {/* KATMAN 2: PERDE */}
       {isCurtainVisible && (
         <div
           ref={curtainRef}
@@ -204,10 +165,7 @@ export default function Preloader() {
         >
           <div className="container mx-auto w-full">
             <div className="gap-grid-gutter grid grid-cols-4 items-center md:grid-cols-8 lg:grid-cols-12">
-              {/* 1. BOŞLUK ALANI */}
               <div className="col-span-2 md:col-span-5 lg:col-span-7"></div>
-
-              {/* 2. ÇİZGİ ALANI */}
               <div className="col-span-2 md:col-span-3 lg:col-span-5">
                 <div className="line-anim h-[1px] w-full origin-left scale-x-0 bg-[#ebe7e1]"></div>
               </div>
