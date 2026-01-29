@@ -23,14 +23,17 @@ export default function ArrowButton({
   mode = "dark",
   className,
 }: ArrowButtonProps) {
-  // Özel Easing Tanımı (Vue kodundaki ease-flow)
+  // Özel Easing Tanımı
   const easeFlow = "ease-[cubic-bezier(0.76,0,0.24,1)]";
 
   return (
     <TransitionLink
       href={href}
       className={cn(
+        // LAYOUT: Header itemlarına uyumlu hizalama
         "group inline-flex cursor-pointer select-none items-center gap-3 align-middle",
+        // TIPOGRAFI: Header standartları (h6, medium, leading-none)
+        "text-h6 font-medium leading-none",
         className,
       )}
     >
@@ -60,8 +63,7 @@ export default function ArrowButton({
           className={cn(
             "absolute left-1/2 top-1/2 h-3 w-3 -translate-x-[150%] -translate-y-1/2 opacity-0 transition-all duration-500",
             "group-hover:-translate-x-1/2 group-hover:opacity-100",
-            // Mode 'dark' ise (metin siyahsa), daire siyah dolar, ikon BEYAZ olmalı.
-            // Mode 'light' ise (metin beyazsa), daire beyaz dolar, ikon SİYAH olmalı.
+            // Mode ayarı: Arka plan dolduğunda ikon zıt renk olmalı
             mode === "dark" ? "text-background" : "text-foreground",
             easeFlow,
           )}
@@ -75,15 +77,14 @@ export default function ArrowButton({
       </div>
 
       {/* --- METİN ALANI --- */}
-      <div className="relative overflow-hidden pb-[4px]">
-        <span className="text-h6 block font-normal leading-none tracking-tight">
-          {children || label}
-        </span>
+      <div className="relative overflow-hidden pb-1">
+        <span className="block">{children || label}</span>
 
         {/* Alt Çizgi (Underline) */}
+        {/* Çizgi kalınlığı 1.5px yapıldı (Diğer butonlarla uyum için) */}
         <span
           className={cn(
-            "absolute bottom-0 left-0 h-[1px] w-full origin-right scale-x-100 bg-current transition-transform duration-500",
+            "absolute bottom-0 left-0 h-[1.5px] w-full origin-right scale-x-100 bg-current transition-transform duration-500",
             "group-hover:scale-x-0",
             easeFlow,
           )}
