@@ -100,6 +100,14 @@ export default function RootLayout({
         <GridDebugger />
         <Analytics />
         <SpeedInsights />
+
+        {/* --- SAĞ TIK ENGELLEME SCRIPTI --- */}
+        {/* Server Component olduğu için event handler yerine script kullanıyoruz */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `document.addEventListener('contextmenu', function(e) { e.preventDefault(); });`,
+          }}
+        />
       </body>
     </html>
   );

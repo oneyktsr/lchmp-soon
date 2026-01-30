@@ -46,8 +46,29 @@
 
   html {
     @apply h-full;
-    /* DÜZELTME: Sayfa sonlarındaki esneme (bounce) efektini kapatır */
+    /* Sayfa sonlarındaki esneme (bounce) efektini kapatır */
     overscroll-behavior: none;
+
+    /* --- SCROLLBAR GİZLEME (Firefox & IE/Edge) --- */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  /* --- SCROLLBAR GİZLEME (Chrome, Safari, Opera) --- */
+  html::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* --- METİN SEÇİMİ (HIGHLIGHT) AYARLARI --- */
+  /* Seçim yapıldığında arka plan transparan olsun, metin rengi aynı kalsın */
+  ::selection {
+    background: transparent; /* Arka plan yok */
+    color: inherit; /* Metin rengi değişmez */
+  }
+
+  ::-moz-selection {
+    background: transparent;
+    color: inherit;
   }
 
   body {
