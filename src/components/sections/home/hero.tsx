@@ -138,7 +138,7 @@ export default function Hero() {
             isVisible ? "opacity-100" : "opacity-0",
           )}
         >
-          <ArrowButton href="/works" label="View Selected Works" />
+          <ArrowButton href="/works" label="Learn More About Us" />
         </div>
 
         {/* AÇIKLAMA */}
