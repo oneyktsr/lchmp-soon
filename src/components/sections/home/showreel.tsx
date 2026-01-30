@@ -1,14 +1,16 @@
 "use client";
 
-import { useRef, useLayoutEffect } from "react";
+import { useRef, useLayoutEffect, useState, useEffect } from "react";
+import { useLoading } from "@/context/loading-context"; // Loading Context Importu
+import { cn } from "@/lib/utils/cn";
+
 // --- YEREL GSAP IMPORTLARI ---
 import gsapCore from "@/plugins/gsap";
 import { ScrollTrigger } from "@/plugins/gsap/ScrollTrigger";
 
-// --- TYPESCRIPT DÜZELTMESİ (Showreel için) ---
+// --- TYPESCRIPT TANIMLAMALARI ---
 interface GSAP {
   registerPlugin(...args: unknown[]): void;
-  // Parallax için fromTo metodunu ekliyoruz
   fromTo(target: unknown, fromVars: unknown, toVars: unknown): GSAPAnimation;
   context(
     func: () => void | (() => void),
@@ -20,34 +22,47 @@ interface GSAPAnimation {
   kill(): void;
 }
 
-// Güvenli tip dönüşümü
 const gsap = gsapCore as unknown as GSAP;
 
 export default function Showreel() {
   const containerRef = useRef<HTMLElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  // 1. Loading Durumu ve Görünürlük State'i
+  const { isLoading } = useLoading();
+  const [isVisible, setIsVisible] = useState(false);
+
+  // 2. Preloader Bitişini Dinleme
+  useEffect(() => {
+    if (!isLoading) {
+      // Preloader bittikten hemen sonra veya hafif bir gecikmeyle açılması için
+      // Hero'daki mantığa benzer bir zamanlayıcı kullanabiliriz.
+      const timer = setTimeout(() => {
+        setIsVisible(true);
+      }, 100); // 100ms gecikme (Preloader perdesi kalkarken başlaması için)
+
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading]);
+
+  // 3. GSAP Parallax Efekti (Mevcut Kod)
   useLayoutEffect(() => {
     gsap.registerPlugin(ScrollTrigger);
 
     const ctx = gsap.context(() => {
-      // --- VIDEO PARALLAX EFEKTİ ---
-      // Video, container viewport'a girdiği andan çıktığı ana kadar
-      // y ekseninde hareket eder.
-      // "Belirgin" olması için aralığı arttırdık (-25% -> 25%)
       gsap.fromTo(
         videoRef.current,
         {
-          yPercent: -25, // Başlangıç: Yukarıda
+          yPercent: -25,
         },
         {
-          yPercent: 25, // Bitiş: Aşağıda
+          yPercent: 25,
           ease: "none",
           scrollTrigger: {
             trigger: containerRef.current,
-            start: "top bottom", // Section ekranın altına girdiğinde başla
-            end: "bottom top", // Section ekranın üstünden çıktığında bitir
-            scrub: true, // Scroll'a pürüzsüz bağla
+            start: "top bottom",
+            end: "bottom top",
+            scrub: true,
           },
         },
       );
@@ -59,16 +74,17 @@ export default function Showreel() {
   return (
     <section
       ref={containerRef}
-      className="relative h-[100svh] w-full overflow-hidden bg-black"
+      className={cn(
+        "relative h-[100svh] w-full overflow-hidden bg-black",
+        // FADE-IN EFEKTİ:
+        "transition-opacity duration-1000 ease-out",
+        isVisible ? "opacity-100" : "opacity-0",
+      )}
     >
       {/* Video Container */}
       <div className="absolute inset-0 h-full w-full">
         <video
           ref={videoRef}
-          // YÜKSEKLİK ve KONUM GÜNCELLEMESİ:
-          // h-[160%] -> Daha geniş hareket alanı.
-          // -top-[30%] -> (160 - 100) / 2 = 30. Videoyu dikeyde ortalar.
-          // Böylece parallax hareketi sırasında alttan/üstten boşluk görünmez.
           className="absolute -top-[30%] left-0 h-[160%] w-full object-cover"
           autoPlay
           muted
