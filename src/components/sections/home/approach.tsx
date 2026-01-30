@@ -96,10 +96,9 @@ export default function Approach() {
           </div>
 
           {/* --- ARA ÇİZGİ --- */}
-          <div className="col-span-4 py-[calc(var(--page-margin)*3)] md:col-span-8 lg:col-span-12">
+          <div className="col-span-4 py-[calc(var(--page-margin)*2)] md:col-span-8 lg:col-span-12">
             <div
               ref={lineRef}
-              // GÜNCELLEME: Opaklık %10'a çekildi (/10)
               className="h-[1px] w-full bg-[#ebe7e1]/10 will-change-transform"
             />
           </div>
@@ -132,8 +131,12 @@ export default function Approach() {
           </div>
 
           {/* --- 3. SATIR: OUR APPROACH --- */}
+          {/* GÜNCELLEME:
+              - pt-[calc(var(--page-margin)*2)]: Mobil için 2 birim boşluk.
+              - md:pt-page-margin: Tablet ve üzeri için 1 birim boşluk (Eski hali korundu).
+          */}
           <div
-            className="pt-page-margin col-span-4 md:col-span-2 md:col-start-3 lg:col-span-3 lg:col-start-5"
+            className="md:pt-page-margin col-span-4 pt-[calc(var(--page-margin)*2)] md:col-span-2 md:col-start-3 lg:col-span-3 lg:col-start-5"
             style={{ opacity: 0.4 }}
           >
             <MaskText
