@@ -77,6 +77,7 @@ export function MaskText({
 
       const SplitTextType = SplitText as unknown as SplitTextConstructor;
 
+      // SplitText'i başlat
       split = new SplitTextType(targetRef.current, {
         type: "lines",
         mask: "lines",
@@ -85,7 +86,7 @@ export function MaskText({
           const lines = self.lines;
           const masks = self.masks;
 
-          // Kuyrukların (j, g, y, p) kesilmemesi için padding hilesi
+          // Kuyrukların kesilmemesi için padding hilesi
           gsapSafe.set(masks, {
             paddingBottom: "0.2em",
             marginBottom: "-0.2em",
@@ -96,27 +97,37 @@ export function MaskText({
               trigger: targetRef.current,
               start: triggerStart,
               toggleActions: "play none none none",
-              once: true,
+              once: true, // Sadece bir kez tetikle
             },
           });
 
-          // REVIZE: "Su gibi akış" ayarları
+          // ANIMASYON
           tl.from(lines, {
             yPercent: 100,
-            duration: 1.05, // 0.75 -> 1.05 (Harekete nefes aldırdık)
-            ease: "power3.out", // power4 -> power3 (Daha doğal, daha az sert bitiş)
+            duration: 1.05,
+            ease: "power3.out",
             stagger: stagger,
             delay: delay,
             force3D: true,
+            // KRİTİK NOKTA: Animasyon bittiğinde SplitText'i temizle
+            onComplete: () => {
+              // 1. SplitText yapısını geri al (div'leri sil, saf metne dön)
+              // Bu sayede resize işleminde hata vermez ve metin doğal akar.
+              if (split) split.revert();
+
+              // 2. Metnin görünür olduğundan emin ol (revert sonrası)
+              gsapSafe.set(targetRef.current, { autoAlpha: 1 });
+            },
           });
 
-          // Görünür yap
+          // Başlangıçta görünür yap
           gsapSafe.set(targetRef.current, { autoAlpha: 1 });
         },
       });
     }, targetRef);
 
     return () => {
+      // Cleanup: Component unmount olursa yine de temizle
       if (split) split.revert();
       ctx.revert();
     };

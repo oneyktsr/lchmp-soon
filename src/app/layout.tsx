@@ -35,6 +35,26 @@ export const metadata: Metadata = {
     },
   ],
   creator: "Le Champ Studio",
+
+  // --- YENİ EKLENENLER: UYGULAMA & KATEGORİ ---
+  applicationName: siteConfig.name,
+  category: "design",
+  referrer: "origin-when-cross-origin", // Güvenlik standardı
+
+  // --- YENİ EKLENENLER: APPLE & MOBİL DENEYİMİ ---
+  appleWebApp: {
+    capable: true,
+    title: siteConfig.name,
+    statusBarStyle: "black-translucent", // Üst barın transparan/siyah olması
+  },
+  formatDetection: {
+    telephone: false, // Telefon numarası gibi görünen sayıların link olmasını engeller
+    date: false,
+    address: false,
+    email: false,
+  },
+
+  // --- MEVCUT AYARLAR ---
   alternates: {
     canonical: "/",
     languages: {
@@ -42,6 +62,22 @@ export const metadata: Metadata = {
       "tr-TR": "/tr",
     },
   },
+
+  // --- YENİ EKLENENLER: ROBOTS (ARAMA MOTORLARI) ---
+  robots: {
+    index: true,
+    follow: true,
+    nocache: false,
+    googleBot: {
+      index: true,
+      follow: true,
+      noimageindex: false,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+
   openGraph: {
     type: "website",
     locale: siteConfig.defaultLocale,
@@ -70,6 +106,12 @@ export const metadata: Metadata = {
     shortcut: "/favicon-16x16.png",
     apple: "/apple-touch-icon.png",
   },
+
+  // --- YENİ EKLENENLER: DOĞRULAMA (İleride kodları buraya gireceğiz) ---
+  verification: {
+    google: "",
+    yandex: "",
+  },
 };
 
 export default function RootLayout({
@@ -91,8 +133,6 @@ export default function RootLayout({
             <Preloader />
             <Header />
 
-            {/* DÜZELTME: Wrapper div ve ID buradan kaldırıldı. */}
-            {/* Artık Children doğrudan render ediliyor. Kontrol Template'de. */}
             {children}
           </SmoothScroll>
         </LoadingProvider>
@@ -102,7 +142,6 @@ export default function RootLayout({
         <SpeedInsights />
 
         {/* --- SAĞ TIK ENGELLEME SCRIPTI --- */}
-        {/* Server Component olduğu için event handler yerine script kullanıyoruz */}
         <script
           dangerouslySetInnerHTML={{
             __html: `document.addEventListener('contextmenu', function(e) { e.preventDefault(); });`,
