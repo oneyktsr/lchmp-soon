@@ -81,12 +81,16 @@ export default function ProjectCard({ project }: ProjectCardProps) {
         <div className="flex max-w-[90%] flex-col items-start overflow-hidden">
           <span className="block whitespace-nowrap">{project.title}</span>
 
-          {/* Slogan Animasyonu (Opacity: 0 -> 50) */}
+          {/* Slogan Animasyonu */}
           <span
             className={cn(
               "block text-[#0e0f12] transition-opacity duration-500",
-              // Hover durumunda opacity-50, değilse opacity-0
-              isHovered ? "opacity-50" : "opacity-0",
+
+              // 1. MOBİL (Varsayılan): Hep görünür (%50 opaklık)
+              "opacity-50",
+
+              // 2. MASAÜSTÜ (md): Varsayılan gizli, Hover ile %50 görünür
+              isHovered ? "md:opacity-50" : "md:opacity-0",
             )}
           >
             {project.tagline}
