@@ -27,7 +27,7 @@ export default function SelectedWorks() {
         <div className="mb-16 md:mb-24 lg:mb-32">
           <div className="gap-x-grid-gutter grid grid-cols-1 md:grid-cols-12">
             <h2 className="text-display leading-tighter col-span-12 font-medium tracking-tighter md:col-start-2">
-              Works
+              Featured Works
             </h2>
           </div>
         </div>
